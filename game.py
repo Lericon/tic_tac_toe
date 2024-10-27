@@ -1,4 +1,4 @@
-from parts import TicTacToe
+from gameparts import TicTacToe
 
 
 game = TicTacToe()
