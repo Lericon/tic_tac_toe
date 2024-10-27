@@ -1,5 +1,5 @@
 from gameparts import TicTacToe
-from gameparts.exceptions import FieldIndexError
+from gameparts.exceptions import FieldIndexError, CellOccupiedError
 
 
 def main():
@@ -21,11 +21,18 @@ def main():
                 column = int(input('Введите номер столбца: '))
                 if column < 0 or column >= game.field_size:
                     raise FieldIndexError
+                if game.board[row][column] != ' ':
+                    raise CellOccupiedError
             except FieldIndexError:
                 print(
                     'Значение должно быть неотрицательным и меньше '
                     f'{game.field_size}'
                 )
+                print('Пожалуйста, введите значения для строки '
+                      'и столбца заново.')
+                continue
+            except CellOccupiedError:
+                print('Ячейка занята')
                 print('Пожалуйста, введите значения для строки '
                       'и столбца заново.')
                 continue
@@ -42,6 +49,12 @@ def main():
         # которые ввёл пользователь.
         game.make_move(row, column, current_player)
         game.display()
+        if game.check_win(current_player):
+            print(f'Победили {current_player}')
+            running = False
+        elif game.is_board_full():
+            print('Ничья!')
+            running = False
         current_player = 'O' if current_player == 'X' else 'X'
 
 
